@@ -1,0 +1,119 @@
+package TheRockYT.CMOTD;
+
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public final class CMOTD extends Plugin {
+    private static Config config;
+    private static String version;
+    @Override
+    public void onEnable() {
+        CommandSender cm = ProxyServer.getInstance().getConsole();
+        cm.sendMessage("§aLoading §eC§1MOTD §av"+getDescription().getVersion()+" by TheRockYT");
+        config = new Config(new File(getDataFolder(), "config.yml"));
+        version = getDescription().getVersion();
+        reload();
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new MaintenanceCMD("maintenance"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new MaintenanceCMD("wartung"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new MaintenanceCMD("wartungen"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CmotdCMD("cmotd"));
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new CmotdCMD("motd"));
+        getProxy().getPluginManager().registerListener(this, new CmotdEventListener());
+
+        cm.sendMessage("§eC§1MOTD §aloaded.");
+        cm.sendMessage("§eThanks for using §eC§1MOTD");
+    }
+    public static void reload(){
+        config.load();
+        config.set("info", "CMOTD v"+version+" by TheRockYT.");
+        config.add("maintenance", false);
+
+        ArrayList<String> normalPlayers = new ArrayList<>();
+        normalPlayers.add("&4--------------------------------");
+        normalPlayers.add("&a");
+        normalPlayers.add("&eWelcome to our &lMinecraft-Server");
+        normalPlayers.add("&a");
+        normalPlayers.add("&cWe will be back soon.");
+        normalPlayers.add("&a");
+        normalPlayers.add("&4--------------------------------");
+
+        ArrayList<String> maintenancePlayers = new ArrayList<>();
+        maintenancePlayers.add("&4--------------------------------");
+        maintenancePlayers.add("&a");
+        maintenancePlayers.add("&cMAINTENANCE mode is turned on.");
+        maintenancePlayers.add("&a");
+        maintenancePlayers.add("&cWe will be back soon.");
+        maintenancePlayers.add("&a");
+        maintenancePlayers.add("&4--------------------------------");
+
+        config.add("motd.normal.players", normalPlayers);
+        config.add("motd.normal.line1", "&eWelcome to our &lMinecraft-Server");
+        config.add("motd.normal.line2", "&eC&1MOTD &6by TheRockYT");
+        config.add("motd.maintenance.protocol", "&cMAINTENANCE");
+        config.add("motd.maintenance.players", maintenancePlayers);
+        config.add("motd.maintenance.line1", "&c--- &lMAINTENANCE&c ---");
+        config.add("motd.maintenance.line2", "&eC&1MOTD &cby TheRockYT");
+
+        ArrayList<String> maintenanceKick = new ArrayList<>();
+        maintenanceKick.add("&4--------------------------------");
+        maintenanceKick.add("&a");
+        maintenanceKick.add("&cMAINTENANCE mode is turned on.");
+        maintenanceKick.add("&a");
+        maintenanceKick.add("&cWe will be back soon.");
+        maintenanceKick.add("&a");
+        maintenanceKick.add("&4--------------------------------");
+
+        config.add("kick.maintenance", maintenanceKick);
+        config.add("permission.maintenance.join", "CMOTD.maintenance.join");
+        config.add("permission.maintenance.on", "CMOTD.maintenance.on");
+        config.add("permission.maintenance.off", "CMOTD.maintenance.off");
+        config.add("permission.maintenance.help", "CMOTD.maintenance.help");
+
+        config.add("permission.help", "CMOTD.help");
+        config.add("permission.reload", "CMOTD.reload");
+
+        config.add("messages.maintenance.on", "&eC&1MOTD &6> &aMaintenance was turned on. Only players with the permission \"%permission%\" can join.");
+        config.add("messages.maintenance.off", "&eC&1MOTD &6> &cMaintenance was turned off. All players can join.");
+        config.add("messages.maintenance.help", "&eC&1MOTD &6> &aUse \"/maintenance <on/off>\".");
+        config.add("messages.maintenance.info", "&eC&1MOTD &6> &aPlugin by TheRockYT.");
+        config.add("messages.maintenance.permission", "&eC&1MOTD &6> &cYou need the permission \"%permission%\".");
+
+        config.add("messages.cmotd.reload.start", "&eC&1MOTD &6> &aReloading CMOTD...");
+        config.add("messages.cmotd.reload.end", "&eC&1MOTD &6> &aCMOTD was successfully reloaded.");
+        config.add("messages.cmotd.help", "&eC&1MOTD &6> &aUse \"/cmotd reload\".");
+        config.add("messages.cmotd.info", "&eC&1MOTD &6> &aPlugin by TheRockYT.");
+        config.add("messages.cmotd.permission", "&eC&1MOTD &6> &cYou need the permission \"%permission%\".");
+        config.save();
+    }
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+
+    public static Config getConfig() {
+        return config;
+    }
+    public static String replacePlaceholder(Object object){
+
+        String finalString = null;
+        if(object instanceof List){
+            for(String str : (List<String>)object){
+                if(finalString == null){
+                    finalString = str;
+                }else{
+                    finalString = finalString+"\n"+str;
+                }
+            }
+        }
+        if(finalString == null){
+            finalString = (String) object;
+        }
+        finalString = finalString.replace("&", "§");
+        return finalString;
+    }
+}
