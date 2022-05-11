@@ -16,7 +16,7 @@ public class MaintenanceCMD extends Command {
             String perm = CMOTD.getConfig().getString("permission.maintenance.on");
             if(sender.hasPermission(perm)){
                 CmotdAPI.setMaintenance(true);
-                sender.sendMessage(CMOTD.replacePlaceholder(CMOTD.getConfig().get("messages.maintenance.on")));
+                sender.sendMessage(CMOTD.replacePlaceholder(CMOTD.getConfig().get("messages.maintenance.on")).replace("%permission%", CMOTD.getConfig().getString("permission.maintenance.join")));
             }else{
                 sender.sendMessage(CMOTD.replacePlaceholder(CMOTD.getConfig().get("messages.maintenance.permission")).replace("%permission%", perm));
             }

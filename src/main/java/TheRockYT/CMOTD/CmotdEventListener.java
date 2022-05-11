@@ -17,18 +17,19 @@ public class CmotdEventListener implements Listener {
         ServerPing.Players players = ping.getPlayers();
         String pS = "";
         if(CMOTD.getConfig().getBool("maintenance")){
-            ping.setVersion(new ServerPing.Protocol("",ping.getVersion().getProtocol()-1));
+            ping.setVersion(new ServerPing.Protocol(CMOTD.replacePlaceholder(CMOTD.getConfig().getString("motd.maintenance.protocol")),ping.getVersion().getProtocol()-1));
             ping.setDescription(CMOTD.replacePlaceholder(CMOTD.getConfig().getString("motd.maintenance.line1")) + "\n" + CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.maintenance.line2")));
             pS = CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.maintenance.players"));
         }else{
             ping.setDescription(CMOTD.replacePlaceholder(CMOTD.getConfig().getString("motd.normal.line1")) + "\n" + CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.normal.line2")));
             pS = CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.normal.players"));
         }
-        ArrayList<ServerPing.PlayerInfo> playerInfos = new ArrayList<>();
-        for(String str : pS.split("\n")){
-            playerInfos.add(new ServerPing.PlayerInfo(str, UUID.randomUUID()));
+        String[] stringSplit = pS.split("\n");
+        ServerPing.PlayerInfo[] playerInfos = new ServerPing.PlayerInfo[stringSplit.length];
+        for(int i = 0; i < playerInfos.length; i++){
+            playerInfos[i] = new ServerPing.PlayerInfo(stringSplit[i], UUID.randomUUID());
         }
-        players.setSample((ServerPing.PlayerInfo[])playerInfos.toArray());
+        players.setSample(playerInfos);
     }
     @EventHandler
     public void onLogin(PostLoginEvent event) {
