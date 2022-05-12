@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    background-color: #141421;
+    font-weight: normal;
+    color: white;
+}
+
+body {
+    min-height: 100%;
+}
+
+#main {
+    width: 100vw;
+}
+
+h2 {
+    padding-top: 5vh;
+    padding-bottom: 3vh;
+    text-align: center;
+    font-size: 50px;
+}
+
+.content {
+    text-align: center;
+    font-size: x-large;
+    min-width: 80vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
+.content *:not(th) {
+    color: #98DF3B;
+}
+
+.content table {
+    text-align: center;
+    margin: auto;
+}
+
+th {
+    font-size: xx-large;
+}
