@@ -8,6 +8,7 @@
 ### Commands:
 #### /maintenance <on/off> - Enable/Disabe maintenance mode
 #### /cmotd reload - Reload the configuration
+#### /cmotd version - Check for updates / display version
 ### Permissions:
 #### Can be set in the plugins/CMOTD/config.yml file
 ### Messages:
