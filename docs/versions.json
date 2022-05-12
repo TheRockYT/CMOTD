@@ -3,6 +3,10 @@
   "latest_development": "1.2",
   "versions": [
     {
+      "version": "1.2.1",
+      "release": true
+    },
+    {
       "version": "1.2",
       "release": true
     },

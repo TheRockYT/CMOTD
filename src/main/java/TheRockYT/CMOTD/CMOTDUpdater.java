@@ -42,7 +42,7 @@ public class CMOTDUpdater {
     public void check(){
         CheckState oldState = state;
         try {
-            JsonElement jsonElement = JsonParser.parseString(getURLContent(new URL("https://therockyt.github.io/CMOTD/versions.json")));
+            JsonElement jsonElement = new JsonParser().parse(getURLContent(new URL("https://therockyt.github.io/CMOTD/versions.json")));
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             latest = jsonObject.get("latest").getAsString();
             latest_development = jsonObject.get("latest_development").getAsString();
