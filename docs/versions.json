@@ -1,0 +1,16 @@
+{
+  "versions": [
+    {
+      "version": "1.2",
+      "state": "developmemnt"
+    },
+    {
+      "version": "1.1",
+      "state": "support"
+    },
+    {
+      "version": "1.0",
+      "state": "outdate"
+    }
+  ]
+}
