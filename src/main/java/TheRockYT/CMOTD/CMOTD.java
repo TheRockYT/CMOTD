@@ -11,12 +11,15 @@ import java.util.List;
 public final class CMOTD extends Plugin {
     private static Config config;
     private static String version;
+    private static Plugin plugin;
+    private static CMOTDUpdater updater;
     @Override
     public void onEnable() {
         CommandSender cm = ProxyServer.getInstance().getConsole();
-        cm.sendMessage("§aLoading §eC§1MOTD §av"+getDescription().getVersion()+" by TheRockYT");
+        cm.sendMessage("§aLoading §eC§1MOTD §av"+getDescription().getVersion()+" by TheRockYT...");
         config = new Config(new File(getDataFolder(), "config.yml"));
         version = getDescription().getVersion();
+        plugin = this;
         reload();
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new MaintenanceCMD("maintenance"));
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new MaintenanceCMD("wartung"));
@@ -69,11 +72,13 @@ public final class CMOTD extends Plugin {
         maintenanceKick.add("&4--------------------------------");
 
         config.add("kick.maintenance", maintenanceKick);
+
         config.add("permission.maintenance.join", "CMOTD.maintenance.join");
         config.add("permission.maintenance.on", "CMOTD.maintenance.on");
         config.add("permission.maintenance.off", "CMOTD.maintenance.off");
         config.add("permission.maintenance.help", "CMOTD.maintenance.help");
 
+        config.add("permission.updates", "CMOTD.updates");
         config.add("permission.help", "CMOTD.help");
         config.add("permission.reload", "CMOTD.reload");
 
@@ -85,10 +90,36 @@ public final class CMOTD extends Plugin {
 
         config.add("messages.cmotd.reload.start", "&eC&1MOTD &6> &aReloading CMOTD...");
         config.add("messages.cmotd.reload.end", "&eC&1MOTD &6> &aCMOTD was successfully reloaded.");
-        config.add("messages.cmotd.help", "&eC&1MOTD &6> &aUse \"/cmotd reload\".");
+
+        ArrayList<String> cmotd_help = new ArrayList<>();
+        cmotd_help.add("&eC&1MOTD &6> &aUse \"/cmotd reload\".");
+        cmotd_help.add("&eC&1MOTD &6> &aUse \"/cmotd version\".");
+
+        config.add("messages.cmotd.help", cmotd_help);
         config.add("messages.cmotd.info", "&eC&1MOTD &6> &aPlugin by TheRockYT.");
         config.add("messages.cmotd.permission", "&eC&1MOTD &6> &cYou need the permission \"%permission%\".");
+
+        ArrayList<String> development_outdated = new ArrayList<>();
+        development_outdated.add("&eC&1MOTD &6> &cYou are using an &4outdated &bdevelopment &cversion of &eC&1MOTD&c. &4Your version: v%version%. &aLatest release: v%latest%. &bLatest development: v%development%.");
+        development_outdated.add("&eC&1MOTD &6> &aDownload the latest version at https://therockyt.github.io");
+
+        ArrayList<String> outdated = new ArrayList<>();
+        outdated.add("&eC&1MOTD &6> &cYou are using an &4outdated &cversion of &eC&1MOTD&c. &4Your version: v%version%. &aLatest release: v%latest%. &bLatest development: v%development%.");
+        outdated.add("&eC&1MOTD &6> &aDownload the latest version at https://therockyt.github.io.");
+
+        config.add("messages.update.outdated_development", development_outdated);
+        config.add("messages.update.outdated", outdated);
+        config.add("messages.update.latest", "&eC&1MOTD &6> &aYou are using the latest release of &eC&1MOTD&a. &aYour version: v%version%. &aLatest release: v%latest%. &bLatest development: v%development%.");
+        config.add("messages.update.latest_development", "&eC&1MOTD &6> &aYou are using the latest &bdevelopment &aversion of &eC&1MOTD&a. &bYour version: v%version%. &aLatest release: v%latest%. &bLatest development: v%development%.");
+        config.add("messages.update.checking", "&eC&1MOTD &6> &aChecking for updates...");
+        config.add("messages.update.check_failed", "&eC&1MOTD &6> &4Update check failed.");
         config.save();
+        if(updater != null){
+            updater.stop();
+        }
+        updater = new CMOTDUpdater( version, "https://therockyt.github.io/CMOTD/versions.json", plugin);
+        updater.check();
+        updater.runUpdater();
     }
     @Override
     public void onDisable() {
@@ -98,6 +129,11 @@ public final class CMOTD extends Plugin {
     public static Config getConfig() {
         return config;
     }
+
+    public static CMOTDUpdater getUpdater() {
+        return updater;
+    }
+
     public static String replacePlaceholder(Object object){
 
         String finalString = null;
@@ -114,6 +150,9 @@ public final class CMOTD extends Plugin {
             finalString = (String) object;
         }
         finalString = finalString.replace("&", "§");
+        finalString = finalString.replace("%version%", version);
+        finalString = finalString.replace("%latest%", updater.getLatest());
+        finalString = finalString.replace("%development%", updater.getLatestDevelopment());
         return finalString;
     }
 }

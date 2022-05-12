@@ -21,4 +21,12 @@ public class CmotdAPI {
     public static void reload(){
         CMOTD.reload();
     }
+    public static void broadcast(String message, String permission){
+        ProxyServer.getInstance().getConsole().sendMessage(message);
+        for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()){
+            if(player.hasPermission(permission)){
+                player.sendMessage(message);
+            }
+        }
+    }
 }

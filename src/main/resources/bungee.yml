@@ -2,3 +2,4 @@ name: CMOTD
 version: '${project.version}'
 main: TheRockYT.CMOTD.CMOTD
 description: A motd plugin with maintenance system.
+author: TheRockYT

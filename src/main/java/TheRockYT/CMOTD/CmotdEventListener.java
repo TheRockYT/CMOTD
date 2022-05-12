@@ -36,6 +36,13 @@ public class CmotdEventListener implements Listener {
         if(CMOTD.getConfig().getBool("maintenance") && !event.getPlayer().hasPermission(CMOTD.getConfig().getString("permission.maintenance.join"))){
 
             event.getPlayer().disconnect(CMOTD.replacePlaceholder(CMOTD.getConfig().get("kick.maintenance")));
+        }else{
+            if(event.getPlayer().hasPermission(CMOTD.getConfig().getString("permission.updates"))){
+                if(CMOTD.getUpdater().getState() != CMOTDUpdater.CheckState.CHECKING && CMOTD.getUpdater().getState() != CMOTDUpdater.CheckState.LATEST_DEVELOPMENT && CMOTD.getUpdater().getState() != CMOTDUpdater.CheckState.LATEST){
+
+                    event.getPlayer().sendMessage(CMOTD.replacePlaceholder(CMOTD.getConfig().get("messages.update."+CMOTD.getUpdater().getState().toString().toLowerCase())));
+                }
+            }
         }
     }
 }
