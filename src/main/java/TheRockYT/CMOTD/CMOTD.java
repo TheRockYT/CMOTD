@@ -41,7 +41,7 @@ public final class CMOTD extends Plugin {
         normalPlayers.add("&a");
         normalPlayers.add("&eWelcome to our &lMinecraft-Server");
         normalPlayers.add("&a");
-        normalPlayers.add("&cWe will be back soon.");
+        normalPlayers.add("&cJoin now");
         normalPlayers.add("&a");
         normalPlayers.add("&4--------------------------------");
 
