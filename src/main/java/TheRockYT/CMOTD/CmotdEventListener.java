@@ -13,10 +13,15 @@ import java.util.UUID;
 public class CmotdEventListener implements Listener {
     @EventHandler
     public void onPing(ProxyPingEvent event){
+        boolean maintenance = CMOTD.getConfig().getBool("maintenance");
+        boolean normal = CMOTD.getConfig().getBool("motd.normal.enabled");
+        if(!normal && !maintenance){
+            return;
+        }
         ServerPing ping = event.getResponse();
         ServerPing.Players players = ping.getPlayers();
         String pS = "";
-        if(CMOTD.getConfig().getBool("maintenance")){
+        if(maintenance){
             ping.setVersion(new ServerPing.Protocol(CMOTD.replacePlaceholder(CMOTD.getConfig().getString("motd.maintenance.protocol")),ping.getVersion().getProtocol()-1));
             ping.setDescription(CMOTD.replacePlaceholder(CMOTD.getConfig().getString("motd.maintenance.line1")) + "\n" + CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.maintenance.line2")));
             pS = CMOTD.replacePlaceholder(CMOTD.getConfig().get("motd.maintenance.players"));

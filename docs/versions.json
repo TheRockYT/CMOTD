@@ -1,7 +1,11 @@
 {
-  "latest": "1.2.1",
-  "latest_development": "1.2.1",
+  "latest": "1.2.2",
+  "latest_development": "1.2.2",
   "versions": [
+    {
+      "version": "1.2.2",
+      "release": true
+    },
     {
       "version": "1.2.1",
       "release": true

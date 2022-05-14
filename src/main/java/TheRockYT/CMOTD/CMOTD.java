@@ -54,6 +54,7 @@ public final class CMOTD extends Plugin {
         maintenancePlayers.add("&a");
         maintenancePlayers.add("&4--------------------------------");
 
+        config.add("motd.normal.enabled", true);
         config.add("motd.normal.players", normalPlayers);
         config.add("motd.normal.line1", "&eWelcome to our &lMinecraft-Server");
         config.add("motd.normal.line2", "&eC&1MOTD &6by TheRockYT");
